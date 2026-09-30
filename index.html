@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Feliz día de los Hot Wheels · 4to B</title>
+<link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Patrick+Hand&family=Bangers&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:#000;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;font-family:'Patrick Hand','Comic Sans MS',cursive;color:#dff1ff}
+canvas{position:fixed;inset:0;width:100%;height:100%}
+h1{position:fixed;top:0;left:0;right:0;z-index:5;text-align:center;padding:calc(env(safe-area-inset-top,0px) + 14px) 14px 0;pointer-events:none;
+ font:400 clamp(24px,5.2vw,50px)/1.15 'Gochi Hand',cursive;color:#d8f0ff;opacity:0;transition:opacity 2s .5s;
+ text-shadow:0 0 6px #3aa4ff,0 0 14px #1e90ff,0 0 28px #1e90ff,0 0 50px #0b5fe0}
+h1 small{display:block;font:400 clamp(15px,2.6vw,22px)/1.2 'Patrick Hand';color:#a9d8ff;text-shadow:0 0 8px #1e90ff;margin-top:6px}
+body.on h1{opacity:1}
+
+/* Inicio */
+#intro{position:fixed;inset:0;z-index:30;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:opacity 1.2s;text-align:center;padding:20px}
+#intro.off{opacity:0;pointer-events:none}
+#intro svg{width:min(70vw,340px);filter:drop-shadow(0 0 18px #ff3b1a66);animation:lat 2.4s ease-in-out infinite}
+#intro p{font:400 clamp(22px,4vw,32px) 'Gochi Hand';color:#6fb6ff;text-shadow:0 0 12px #1e90ff;margin-top:18px;animation:lat 1.6s ease-in-out infinite}
+#intro em{font-style:normal;color:#5b7fa8;font-size:18px;margin-top:8px}
+@keyframes lat{50%{opacity:.35}}
+
+/* Carritos */
+.car{position:fixed;left:0;top:0;z-index:10;background:none;border:0;padding:0;cursor:pointer;color:inherit;opacity:0;will-change:transform}
+.car .b{display:block}
+.car svg{display:block;width:100%;height:auto;overflow:visible;filter:drop-shadow(0 4px 5px #000)}
+.car .t{display:block;width:max-content;margin:-2px auto 0;padding:1px 7px 2px;border-radius:10px;background:#03102acc;border:1px solid #2b7fe0;
+ font:400 var(--fs) 'Patrick Hand';color:#eaf6ff;text-shadow:0 0 6px #1e90ff;white-space:nowrap}
+.car:focus-visible .t,.car:hover .t{background:#1e90ff;color:#fff}
+.rd{transform-box:fill-box;transform-origin:center;animation:rd .4s linear infinite}
+@keyframes rd{to{transform:rotate(360deg)}}
+
+/* Tarjeta */
+#modal{position:fixed;inset:0;z-index:40;display:none;align-items:center;justify-content:center;background:#000d;padding:18px}
+#modal.on{display:flex}
+.card{max-height:92vh;overflow:auto;width:min(440px,100%);padding:22px 20px 24px;text-align:center;border-radius:26px;background:#030a1c;border:2px solid #1e6fd0;box-shadow:0 0 30px #1e90ff88,inset 0 0 30px #0b3d9155;animation:pop .35s ease-out}
+@keyframes pop{from{transform:scale(.7);opacity:0}}
+.card .img{background:#02060f;border-radius:18px;padding:22px 14px 14px;margin-bottom:14px}
+.card h2{font:400 34px 'Gochi Hand';color:#cfe9ff;text-shadow:0 0 10px #1e90ff,0 0 24px #1e90ff;line-height:1.1}
+.card p{font-size:22px;line-height:1.3;color:#b9dcff;margin:10px 4px 18px}
+.card button{cursor:pointer;font:400 24px 'Gochi Hand';color:#8fc6ff;background:none;border:2px solid #1e6fd0;border-radius:40px;padding:8px 44px;box-shadow:0 0 14px #1e90ff55}
+.card button:hover{background:#1e90ff33}
+
+#gen{position:fixed;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);z-index:20;display:none;cursor:pointer;font:400 20px 'Gochi Hand';color:#fff;background:linear-gradient(135deg,#1e90ff,#0b4fd6);border:2px solid #7fc4ff;border-radius:30px;padding:7px 16px;box-shadow:0 0 18px #1e90ff;animation:pl 1.8s ease-in-out infinite}
+body.on #gen{display:block}
+@keyframes pl{50%{transform:scale(1.07);box-shadow:0 0 30px #5ee0ff}}
+.card svg{width:100%;height:auto;display:block}
+canvas{touch-action:none;cursor:grab}
+#turbo{position:fixed;left:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 158px);z-index:20;display:none;cursor:pointer;font:400 18px 'Gochi Hand';color:#fff;background:#03102a;border:2px solid #ff8a1a;border-radius:24px;padding:5px 14px;box-shadow:0 0 14px #ff8a1a88}
+#turbo.on{background:#ff8a1a;box-shadow:0 0 24px #ff8a1a}
+body.on #turbo{display:block}
+#flash{position:fixed;inset:0;background:#4aa8ff;opacity:0;pointer-events:none;z-index:4;mix-blend-mode:screen}
+/* Música */
+#mus{position:fixed;left:8px;bottom:calc(env(safe-area-inset-bottom,0px) + 8px);z-index:20;display:none;flex-direction:column;gap:5px;align-items:flex-start}
+#mus.on{display:flex}
+#mus iframe{width:150px;height:84px;border:1px solid #1e6fd0;border-radius:8px;background:#000}
+#mus button{cursor:pointer;background:#03102a;color:#bfe1ff;border:1px solid #2b7fe0;border-radius:16px;padding:3px 12px;font:400 15px 'Patrick Hand'}
+#mus a{color:#6fb6ff;font-size:13px}
+#hint{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 66px);right:12px;text-align:right;max-width:70vw;z-index:5;font-size:17px;color:#6fb6ff;text-shadow:0 0 8px #1e90ff;opacity:0;transition:opacity 2s 4s;pointer-events:none}
+body.on #hint{opacity:.9}
+</style>
+</head>
+<body>
+<h1>Feliz día de los Hot Wheels,<br>chicos del 4to B 🚗<small>Hoy la pista es de ustedes. Toca tu carrito y descubre tu mensaje.</small></h1>
+
+<div id="intro">
+  <svg viewBox="0 0 320 120"><path d="M6 96 C60 20 150 6 250 28 C200 30 130 52 60 104 Z" fill="#e8281a"/><path d="M30 92 C90 44 160 30 240 36 C170 46 110 66 60 100Z" fill="#ff8a1a"/>
+  <text x="50" y="82" font-family="Bangers,Impact,sans-serif" font-size="66" fill="#ffd21a" stroke="#d81e10" stroke-width="5" paint-order="stroke" transform="skewX(-8)">HOT WHEELS</text></svg>
+  <p>Toca para iniciar</p><em>(con sonido 🔊)</em>
+</div>
+
+<div id="modal"><div class="card"><div class="img" id="mImg"></div><h2 id="mN"></h2><p id="mT"></p><button id="cl">Cerrar</button></div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<div id="mus"><div id="pl"></div><button id="mb">⏸ Música</button><a href="https://youtu.be/qTAYAL8gbRI?si=86y4eYzIFsFZNpZG" target="_blank" rel="noopener">¿No suena? Abrir en YouTube</a></div>
+<div id="hint">✨ arrastra para girar · pellizca o rueda para acercar · toca un carrito o el cielo</div>
+<button id="gen">💌 Mensaje para todos</button><button id="turbo">🚀 Turbo</button><div id="flash"></div>
+
+<svg width="0" height="0" style="position:absolute"><defs>
+ <linearGradient id="sh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".5"/></linearGradient>
+ <linearGradient id="gl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7fb8e8"/><stop offset="1" stop-color="#0a1a33"/></linearGradient></defs></svg>
+
+<script>
+const NOMBRES=["ROGER NELSON","GUEL RUPERTO","LUIS DAVID","LEONARDO","ABDON","LUIS AVELARDO","ELVIS YOVANI","LUIS AVELARDO","EDWIN","FERNANDO JOSE","EDUARDO","RELY","CARLOS ALBERTO","SILVIO RAMIRO","RONALD LIZGARDO","DENIS","HOZMAR"];
+const COL=["#1f9d3a","#e8281a","#1e78ff","#e9eef5","#ff8a1a","#0b3fbf","#ffd21a","#1c1c22","#00b7d6","#7a3cff","#d81e5b","#1f9d3a","#1e78ff","#c9d2dc","#e8281a","#ff8a1a","#0f7d8a"];
+const MSG=["Gracias por hacer que cada día valga la pena.","Eres pura energía. Sigue acelerando sin miedo.","Tu sonrisa ilumina todo el salón. ¡Feliz día!","A todo motor hacia tus sueños, campeón.","Eres una persona especial y el 4to B te necesita.","Siempre brillas. Nunca dejes de rodar.","Un gran amigo vale más que mil carreras ganadas.","Hoy la pista es tuya. ¡Feliz día de los Hot Wheels!"];
+const FRASES=["Feliz día para ti","Siempre brillas","Hot Wheels para ti","A todo motor","Tu compañía ilumina todo","Eres pura energía","Un detalle para ti","Full velocidad","Eres una persona especial","4to B, no frenamos","Rueda con ganas","Campeón de la pista"];
+
+
+const $=id=>document.getElementById(id);
+function carSVG(c,num){return `<svg viewBox="0 0 200 72">
+<ellipse cx="100" cy="66" rx="90" ry="4" fill="#000" opacity=".5"/>
+<path d="M6 47 C6 39 14 37 30 35 L58 31 C72 19 88 13 110 13 C130 13 148 21 158 31 L184 35 C194 37 197 43 197 49 L197 54 L6 54Z" fill="${c}"/>
+<path d="M4 30h26v4H4z M10 30v9M24 30v9" fill="${c}" stroke="#000" stroke-width="1.4" opacity=".9"/>
+<path d="M70 31 C80 21 92 17 108 17 C126 17 140 23 150 31Z" fill="url(#gl)"/><path d="M110 17V31" stroke="${c}" stroke-width="2.5"/>
+<path d="M58 44 Q98 33 156 42 Q122 50 90 49Z" fill="#e8281a"/><path d="M68 45 Q104 38 148 43 Q120 47 96 47Z" fill="#ffc21a"/>
+<text x="84" y="46" font-family="Bangers,Impact" font-size="10" font-style="italic" fill="#fff" stroke="#b01008" stroke-width=".6" paint-order="stroke" transform="rotate(-4 100 44)">HotWheels</text>
+<circle cx="120" cy="30" r="0"/><text x="46" y="42" font-size="8" font-weight="900" font-family="Arial" fill="#fff" text-anchor="middle" opacity=".9">${num}</text>
+<path d="M6 47 C6 39 14 37 30 35 L58 31 C72 19 88 13 110 13 C130 13 148 21 158 31 L184 35 C194 37 197 43 197 49 L197 54 L6 54Z" fill="url(#sh)"/>
+<rect x="186" y="38" width="9" height="4" rx="2" fill="#fffbc0"/><rect x="5" y="40" width="4" height="4" rx="1" fill="#f22"/>
+<g><circle cx="44" cy="54" r="14" fill="#0d0d10"/><circle cx="44" cy="54" r="10.5" fill="#1a1a1f" stroke="#e03030" stroke-width="1.6"/><g class="rd"><path d="M44 45v18M35 54h18M37.5 47.5l13 13M50.5 47.5l-13 13" stroke="#aab" stroke-width="1.6"/></g></g>
+<g><circle cx="158" cy="54" r="14" fill="#0d0d10"/><circle cx="158" cy="54" r="10.5" fill="#1a1a1f" stroke="#e03030" stroke-width="1.6"/><g class="rd"><path d="M158 45v18M149 54h18M151.5 47.5l13 13M164.5 47.5l-13 13" stroke="#aab" stroke-width="1.6"/></g></g></svg>`}
+
+
+function init(){
+const ren=new THREE.WebGLRenderer({antialias:true});ren.setPixelRatio(Math.min(devicePixelRatio||1,2));document.body.prepend(ren.domElement);
+const cv=ren.domElement,scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(55,1,.1,300),V=(x,y,z)=>new THREE.Vector3(x,y,z);
+let W,H,BASE=9.5,th=.6,ph=.4,rad=30,tph=1.15,trad=9.5,vth=0,started=false,open=false,T=0,ts=0,spd=1,turbo=false,t0=0,idle=0,drag=false,hov=null;
+const rd=()=>{const u=Math.random()*2-1,a=Math.random()*6.283,q=Math.sqrt(1-u*u);return new THREE.Vector3(q*Math.cos(a),u,q*Math.sin(a));};
+const zoom=v=>Math.max(BASE*.45,Math.min(BASE*1.8,v));
+function fit(){W=innerWidth;H=innerHeight;ren.setSize(W,H);cam.aspect=W/H;cam.updateProjectionMatrix();BASE=W<H?14:9.5;if(!started)trad=BASE;}
+fit();addEventListener('resize',fit);
+scene.add(new THREE.AmbientLight(0x7f9ee0,1.1));const dl=new THREE.DirectionalLight(0xffffff,1);dl.position.set(5,8,4);scene.add(dl);
+const pl=new THREE.PointLight(0x2a8cff,3,16);pl.position.set(0,.8,0);scene.add(pl);
+const PR=ren.getPixelRatio(),mob=innerWidth<700;
+
+// Textos y brillos
+function tex(t,font,col,glow,w,h,box){const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');
+ if(box){x.fillStyle='#03102ad9';x.strokeStyle='#2b7fe0';x.lineWidth=4;x.beginPath();x.roundRect?x.roundRect(4,8,w-8,h-16,26):x.rect(4,8,w-8,h-16);x.fill();x.stroke();}
+ x.textAlign='center';x.textBaseline='middle';x.font=font;x.shadowColor=glow;x.shadowBlur=14;x.fillStyle=col;x.fillText(t,w/2,h/2+3);return new THREE.CanvasTexture(c);}
+const spr=(map,sx,sy)=>{const s=new THREE.Sprite(new THREE.SpriteMaterial({map,transparent:true,depthWrite:false}));s.scale.set(sx,sy,1);return s;};
+const gc=document.createElement('canvas');gc.width=gc.height=128;{const x=gc.getContext('2d'),gr=x.createRadialGradient(64,64,0,64,64,64);gr.addColorStop(0,'rgba(140,210,255,1)');gr.addColorStop(.3,'rgba(30,144,255,.5)');gr.addColorStop(1,'rgba(0,40,120,0)');x.fillStyle=gr;x.fillRect(0,0,128,128);}
+const glow=new THREE.CanvasTexture(gc);
+
+// Estrellas de fondo
+{const p=new Float32Array(900*3);for(let i=0;i<900;i++){const v=rd().multiplyScalar(70+Math.random()*30);p.set([v.x,v.y,v.z],i*3);}
+ const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(p,3));scene.add(new THREE.Points(g,new THREE.PointsMaterial({color:0xbfe3ff,size:1.5,sizeAttenuation:false})));}
+
+// Galaxia (partículas girando en el shader)
+const N=mob?9000:17000,gp=new Float32Array(N*3),gcl=new Float32Array(N),RG=[1.7,2.9,4.2,5.6];
+for(let i=0;i<N;i++){let r,a,c;
+ if(i%4===0){r=RG[i%16>>2]+(Math.random()+Math.random()-1)*.05;a=Math.random()*6.283;c=1;}
+ else{r=1.5+Math.pow(Math.random(),1.4)*5.2;a=Math.floor(Math.random()*3)*2.094+r*.8+(Math.random()-.5)*1.3;c=Math.random()*.45;}
+ gp.set([r,a,(Math.random()+Math.random()-1)*.22],i*3);gcl[i]=c;}
+const gg=new THREE.BufferGeometry();gg.setAttribute('position',new THREE.BufferAttribute(gp,3));gg.setAttribute('aC',new THREE.BufferAttribute(gcl,1));
+const gal=new THREE.Points(gg,new THREE.ShaderMaterial({uniforms:{uT:{value:0},uS:{value:24},uPR:{value:PR}},transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,
+ vertexShader:`uniform float uT,uS,uPR;attribute float aC;varying float vC;void main(){float r=position.x;float a=position.y+uT/(r+.9);vec3 p=vec3(cos(a)*r,position.z,sin(a)*r);vC=aC;vec4 mv=modelViewMatrix*vec4(p,1.);gl_PointSize=uS*uPR*(.7+aC*.9)/-mv.z;gl_Position=projectionMatrix*mv;}`,
+ fragmentShader:`varying float vC;void main(){float d=length(gl_PointCoord-.5);if(d>.5)discard;float al=smoothstep(.5,0.,d);gl_FragColor=vec4(mix(vec3(.25,.6,1.),vec3(1.),vC)*al*(.55+vC*.6),al);}`}));
+gal.frustumCulled=false;scene.add(gal);
+
+// Agujero negro
+scene.add(new THREE.Mesh(new THREE.SphereGeometry(.75,32,24),new THREE.MeshBasicMaterial({color:0})));
+const disk=new THREE.Mesh(new THREE.RingGeometry(.9,1.8,64).rotateX(-Math.PI/2),new THREE.MeshBasicMaterial({color:0x1e90ff,transparent:true,opacity:.45,side:2,blending:2,depthWrite:false}));scene.add(disk);
+const halo=new THREE.Mesh(new THREE.TorusGeometry(.95,.06,16,90),new THREE.MeshBasicMaterial({color:0x35b0ff}));scene.add(halo);
+const gs=spr(glow,6,6);gs.material.blending=2;gs.position.y=.02;scene.add(gs);
+
+// Carro de partículas (se arma al entrar y siempre mira a la cámara)
+const pcG=new THREE.Group();pcG.position.y=4.7;scene.add(pcG);
+const oc=document.createElement('canvas');oc.width=300;oc.height=130;const ox=oc.getContext('2d');ox.fillStyle='#fff';
+ox.beginPath();ox.moveTo(10,100);ox.lineTo(10,78);ox.quadraticCurveTo(14,68,40,64);ox.lineTo(85,56);ox.quadraticCurveTo(105,20,150,20);ox.quadraticCurveTo(200,20,222,54);ox.lineTo(268,66);ox.quadraticCurveTo(292,72,292,90);ox.lineTo(292,100);ox.fill();
+ox.beginPath();ox.arc(72,100,22,0,7);ox.arc(232,100,22,0,7);ox.fill();
+const od=ox.getImageData(0,0,300,130).data,pts=[];for(let y=0;y<130;y+=2)for(let x=0;x<300;x+=2)if(od[(y*300+x)*4+3]>100)pts.push([x/300-.5,y/130-.5]);
+const PN=Math.min(pts.length,mob?1800:3000),pp=new Float32Array(PN*3),ps=new Float32Array(PN*3),pf=new Float32Array(PN);
+for(let i=0;i<PN;i++){const q=pts[(Math.random()*pts.length)|0];pp.set([q[0]*5.4,-q[1]*2.4,(Math.random()-.5)*.5],i*3);const v=rd().multiplyScalar(6+Math.random()*10);ps.set([v.x,v.y,v.z],i*3);pf[i]=Math.random()*20;}
+const pg=new THREE.BufferGeometry();pg.setAttribute('position',new THREE.BufferAttribute(pp,3));pg.setAttribute('aS',new THREE.BufferAttribute(ps,3));pg.setAttribute('aP',new THREE.BufferAttribute(pf,1));
+const pcm=new THREE.ShaderMaterial({uniforms:{uA:{value:0},uT:{value:0},uPR:{value:PR}},transparent:true,depthWrite:false,blending:2,
+ vertexShader:`uniform float uA,uT,uPR;attribute vec3 aS;attribute float aP;void main(){vec3 p=mix(aS,position,uA)+vec3(sin(uT*1.6+aP),cos(uT*1.3+aP*1.7),sin(uT+aP*2.))*.05;vec4 mv=modelViewMatrix*vec4(p,1.);gl_PointSize=15.*uPR/-mv.z;gl_Position=projectionMatrix*mv;}`,
+ fragmentShader:`void main(){float d=length(gl_PointCoord-.5);if(d>.5)discard;gl_FragColor=vec4(vec3(.62,.89,1.)*smoothstep(.5,0.,d)*1.2,1.);}`});
+const pcp=new THREE.Points(pg,pcm);pcp.frustumCulled=false;pcG.add(pcp);
+
+// Modelo 3D del carrito
+const dc=document.createElement('canvas');dc.width=512;dc.height=128;{const x=dc.getContext('2d');
+ x.fillStyle='#e8281a';x.beginPath();x.moveTo(0,90);x.quadraticCurveTo(200,10,512,50);x.quadraticCurveTo(300,80,110,120);x.fill();
+ x.fillStyle='#ffc21a';x.beginPath();x.moveTo(40,92);x.quadraticCurveTo(220,40,470,58);x.quadraticCurveTo(300,78,130,108);x.fill();
+ x.font="italic 54px Bangers,Impact,sans-serif";x.fillStyle='#fff';x.strokeStyle='#b01008';x.lineWidth=6;x.strokeText('HotWheels',150,86);x.fillText('HotWheels',150,86);}
+const decal=new THREE.CanvasTexture(dc);
+function makeCar(col,idx){
+ const M=(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,metalness:.55,roughness:.3},o||{})),B=(w,h,d,m,x,y,z)=>{const b=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);b.position.set(x,y,z);return b;};
+ const g=new THREE.Group(),n=new THREE.Group(),bm=M(col),wheels=[];g.userData.idx=idx;g.add(n);n.scale.setScalar(.7);
+ n.add(B(2.1,.38,.95,bm,0,.05,0),B(.75,.22,.9,bm,.62,.3,0),B(.55,.04,.5,bm,-.15,.6,0),B(.3,.05,.95,bm,-1,.56,0),B(.05,.2,.05,bm,-1,.44,.3),B(.05,.2,.05,bm,-1,.44,-.3));
+ const cg=new THREE.CylinderGeometry(.42,.66,.34,4);cg.rotateY(Math.PI/4);const cab=new THREE.Mesh(cg,M(0x0b1a33,{metalness:.9,roughness:.1}));cab.scale.set(1.5,1,1.25);cab.position.set(-.15,.42,0);n.add(cab);
+ [1,-1].forEach(z=>{n.add(B(.05,.08,.18,new THREE.MeshBasicMaterial({color:0xfff3a0}),1.06,.1,z*.3),B(.05,.08,.18,new THREE.MeshBasicMaterial({color:0xff2a2a}),-1.06,.12,z*.3));});
+ const dm=new THREE.MeshBasicMaterial({map:decal,transparent:true}),d1=new THREE.Mesh(new THREE.PlaneGeometry(1.5,.375),dm),d2=d1.clone();d1.position.set(0,.08,.477);d2.position.set(0,.08,-.477);d2.rotation.y=Math.PI;n.add(d1,d2);
+ [[.68,.5],[.68,-.5],[-.68,.5],[-.68,-.5]].forEach(p=>{const w=new THREE.Group(),t=new THREE.CylinderGeometry(.27,.27,.22,20).rotateX(Math.PI/2),r=new THREE.CylinderGeometry(.16,.16,.24,10).rotateX(Math.PI/2);
+  w.add(new THREE.Mesh(t,M(0x111114,{metalness:0,roughness:.9})),new THREE.Mesh(r,M(0xd0d8e6,{metalness:.9,roughness:.2})));const rr=new THREE.Mesh(new THREE.TorusGeometry(.21,.02,6,18),new THREE.MeshBasicMaterial({color:0xe03030}));rr.position.z=p[1]>0?.115:-.115;w.add(rr);
+  w.position.set(p[0],-.1,p[1]);n.add(w);wheels.push(w);});
+ const ug=new THREE.Mesh(new THREE.PlaneGeometry(2.4,1.3).rotateX(-Math.PI/2),new THREE.MeshBasicMaterial({color:0x1e90ff,transparent:true,opacity:.4,blending:2,depthWrite:false}));ug.position.y=-.36;n.add(ug);
+ const lb=spr(tex('para '+NOMBRES[idx],"44px 'Patrick Hand',cursive",'#eaf6ff','#1e90ff',512,100,true),2.4,.47);lb.position.y=1.05;g.add(lb);
+ return {g,w:wheels,idx,j:0,sc:1};
+}
+const cars=[],pivots=[];let k=0;
+[{r:2.5,n:5},{r:3.7,n:6},{r:5,n:6}].forEach((l,li)=>{for(let i=0;i<l.n;i++,k++){const c=makeCar(COL[k],k);c.r=l.r;c.a0=i/l.n*6.283+li*.7;cars.push(c);pivots.push(c.g);scene.add(c.g);}});
+
+// Frases en órbita
+const fr=FRASES.map((t,i)=>{const s=spr(tex(t,"46px 'Patrick Hand',cursive",'#fff','#1e90ff',512,96),2.5,.47);s.material.opacity=.9;scene.add(s);return {s,r:[3.1,4.35,5.6,1.95][i%4],a0:i*2.1,y:.9+(i%3)*.35};});
+
+// Fuegos artificiales 3D, rayos y emojis
+const MAXP=3500,fpos=new Float32Array(MAXP*3),fcol=new Float32Array(MAXP*3),fvel=new Float32Array(MAXP*3),fbase=new Float32Array(MAXP*3),fl=new Float32Array(MAXP);let fi=0;
+const fgeo=new THREE.BufferGeometry();fgeo.setAttribute('position',new THREE.BufferAttribute(fpos,3));fgeo.setAttribute('color',new THREE.BufferAttribute(fcol,3));
+const fpts=new THREE.Points(fgeo,new THREE.PointsMaterial({size:.12,vertexColors:true,blending:2,depthWrite:false,transparent:true}));fpts.frustumCulled=false;scene.add(fpts);
+const PAL=[0x7fc4ff,0xffffff,0xffb01a,0x3aa4ff,0xff5a3a].map(h=>new THREE.Color(h));
+function spark(x,y,z,vx,vy,vz,c,l){const i=(fi++%MAXP)*3;fpos.set([x,y,z],i);fvel.set([vx,vy,vz],i);fbase.set([c.r,c.g,c.b],i);fl[i/3]=l;}
+const EM=['🏎️','🚗','⚡','🔥','🏁','⭐','🚙','💥'],emT={},ES=[],RK=[],bolts=[];
+function emS(e){if(!emT[e]){const c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d');x.font='96px serif';x.textAlign='center';x.textBaseline='middle';x.fillText(e,64,70);emT[e]=new THREE.CanvasTexture(c);}return spr(emT[e],1,1);}
+function flash(a){const f=$('flash');f.style.transition='none';f.style.opacity=a;setTimeout(()=>{f.style.transition='opacity .6s';f.style.opacity=0},40);}
+function mkBolt(x,z){if(x===undefined){const a=Math.random()*6.283,r=3+Math.random()*5;x=Math.cos(a)*r;z=Math.sin(a)*r;}
+ const p=[];let px=x,pz=z,y=10;while(y>0){p.push(V(px,y,pz));y-=.6+Math.random()*.7;px+=(Math.random()-.5)*.9;pz+=(Math.random()-.5)*.9;}p.push(V(px,0,pz));
+ [0,.04,-.04].forEach(o=>{const l=new THREE.Line(new THREE.BufferGeometry().setFromPoints(p),new THREE.LineBasicMaterial({color:0xcfeaff,blending:2,transparent:true}));l.position.x=o;scene.add(l);bolts.push({l,t:.4});});
+ for(let i=0;i<24;i++){const a=Math.random()*6.283;spark(px,.1,pz,Math.cos(a)*2,1+Math.random()*3,Math.sin(a)*2,PAL[1],.8);}flash(.5);}
+function boom(x,y,z,fe){const c=PAL[(Math.random()*5)|0],em=fe||EM[(Math.random()*EM.length)|0];
+ for(let i=0;i<80;i++){const v=rd().multiplyScalar(1.5+Math.random()*3.5);spark(x,y,z,v.x,v.y,v.z,Math.random()<.3?PAL[1]:c,1.2+Math.random()*.9);}
+ for(let i=0;i<9;i++){const s=emS(em),v=rd().multiplyScalar(2.2+Math.random()*1.2);s.position.set(x,y,z);s.userData={v,l:2.4};scene.add(s);ES.push(s);}
+ flash(.2);if(em==='⚡')mkBolt(x,z);}
+function fx(dt){
+ if(started){nextR-=dt;if(nextR<0){const a=Math.random()*6.283,r=3+Math.random()*6;RK.push({p:V(Math.cos(a)*r,-1,Math.sin(a)*r),ty:3.5+Math.random()*4.5});nextR=.7+Math.random()*1.2;}
+  nextB-=dt;if(nextB<0){mkBolt();nextB=5+Math.random()*5;}}
+ for(let i=RK.length-1;i>=0;i--){const r=RK[i];r.p.y+=9*dt;spark(r.p.x,r.p.y,r.p.z,(Math.random()-.5)*.6,-1,(Math.random()-.5)*.6,PAL[2],.5);if(r.p.y>=r.ty){boom(r.p.x,r.p.y,r.p.z);RK.splice(i,1);}}
+ for(let i=0;i<MAXP;i++){const j=i*3;if(fl[i]>0){fl[i]-=dt;fvel[j+1]-=3.5*dt;fpos[j]+=fvel[j]*dt;fpos[j+1]+=fvel[j+1]*dt;fpos[j+2]+=fvel[j+2]*dt;const b=Math.min(1,fl[i]*1.5);fcol[j]=fbase[j]*b;fcol[j+1]=fbase[j+1]*b;fcol[j+2]=fbase[j+2]*b;}else if(fcol[j]||fcol[j+1]){fcol[j]=fcol[j+1]=fcol[j+2]=0;}}
+ fgeo.attributes.position.needsUpdate=fgeo.attributes.color.needsUpdate=true;
+ for(let i=ES.length-1;i>=0;i--){const s=ES[i],u=s.userData;s.position.addScaledVector(u.v,dt);u.v.y-=1.2*dt;u.l-=dt;s.material.opacity=Math.min(1,u.l);if(u.l<=0){scene.remove(s);ES.splice(i,1);}}
+ for(let i=bolts.length-1;i>=0;i--){const b=bolts[i];b.t-=dt;b.l.material.opacity=Math.max(0,b.t/.4);if(b.t<=0){scene.remove(b.l);b.l.geometry.dispose();bolts.splice(i,1);}}
+}
+let nextR=1,nextB=4;
+
+// Tarjeta
+function abrir(c){open=true;$('mImg').innerHTML=carSVG(COL[c.idx],c.idx+1);$('mN').textContent=NOMBRES[c.idx];$('mT').textContent=MSG[c.idx%MSG.length];$('modal').classList.add('on');}
+function cerrar(){open=false;$('modal').classList.remove('on');}
+$('cl').onclick=cerrar;$('modal').onclick=e=>{if(e.target.id==='modal')cerrar()};addEventListener('keydown',e=>{if(e.key==='Escape')cerrar()});
+const GEN="Chicos del 4to B: hoy celebramos que cada uno de ustedes acelera, ríe y suma a este equipo. Gracias por ser un salón increíble, por la amistad, las bromas y las ganas de seguir adelante. Que la vida los lleve siempre a toda velocidad hacia sus sueños, con el motor encendido y buenos amigos al lado. ¡Feliz día de los Hot Wheels! 🏁";
+$('gen').onclick=()=>{open=true;$('mImg').innerHTML='<div style="display:flex;gap:2px">'+[0,2,6].map(i=>'<div style="flex:1">'+carSVG(COL[i],i+1)+'</div>').join('')+'</div>';
+ $('mN').textContent='Para todos los chicos del 4to B';$('mT').textContent=GEN;$('modal').classList.add('on');
+ [0,.5,1,1.6].forEach(d=>setTimeout(()=>boom((Math.random()-.5)*10,3+Math.random()*4,(Math.random()-.5)*8),d*1000));};
+$('turbo').onclick=()=>{turbo=!turbo;$('turbo').classList.toggle('on',turbo);$('turbo').textContent=turbo?'🚀 Turbo ON':'🚀 Turbo';if(turbo)mkBolt();};
+
+// Interacción: arrastrar, pellizcar, rueda, tocar
+const ray=new THREE.Raycaster(),ndc=new THREE.Vector2(),ptr=new Map();let moved=0,pd=0;
+function pick(x,y){ndc.set(x/W*2-1,-(y/H)*2+1);ray.setFromCamera(ndc,cam);const h=ray.intersectObjects(pivots,true)[0];if(!h)return null;let o=h.object;while(o&&o.userData.idx===undefined)o=o.parent;return o?cars[o.userData.idx]:null;}
+function tap(x,y){const c=pick(x,y);if(c){c.j=1;const p=c.g.position;boom(p.x,p.y+.8,p.z);setTimeout(()=>abrir(c),700);}else{const p=ray.ray.at(Math.min(rad*.85,16),V(0,0,0));boom(p.x,p.y,p.z);}}
+cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId);ptr.set(e.pointerId,[e.clientX,e.clientY]);drag=ptr.size===1;moved=0;idle=0;cv.style.cursor='grabbing';if(ptr.size===2){const a=[...ptr.values()];pd=Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1]);}});
+cv.addEventListener('pointermove',e=>{const p=ptr.get(e.pointerId);
+ if(!p){if(e.pointerType==='mouse'){hov=started&&!open?pick(e.clientX,e.clientY):null;cv.style.cursor=hov?'pointer':'grab';}return;}
+ const dx=e.clientX-p[0],dy=e.clientY-p[1];p[0]=e.clientX;p[1]=e.clientY;idle=0;
+ if(ptr.size===2){const a=[...ptr.values()],d=Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1]);trad=zoom(trad*pd/d);pd=d;moved=99;return;}
+ moved+=Math.abs(dx)+Math.abs(dy);th+=dx*.006;vth=dx*.35;tph=Math.max(.2,Math.min(1.5,tph-dy*.005));});
+const up=e=>{ptr.delete(e.pointerId);drag=false;cv.style.cursor='grab';};
+cv.addEventListener('pointerup',e=>{const m=moved;up(e);if(m<8&&started&&!open)tap(e.clientX,e.clientY);});cv.addEventListener('pointercancel',up);
+cv.addEventListener('wheel',e=>{e.preventDefault();trad=zoom(trad*(1+e.deltaY*.001));idle=0;},{passive:false});
+
+// Música: aparece al entrar a la galaxia
+const ID='qTAYAL8gbRI';let suena=false;
+function musica(){$('pl').innerHTML=`<iframe src="https://www.youtube.com/embed/${ID}?autoplay=1&loop=1&playlist=${ID}&playsinline=1" allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin" title="Música"></iframe>`;$('mus').classList.add('on');$('mb').textContent='⏸ Música';suena=true;}
+$('mb').onclick=()=>{if(suena){$('pl').innerHTML='';$('mb').textContent='▶ Música';suena=false}else musica()};
+$('intro').onclick=()=>{if(started)return;musica();$('intro').classList.add('off');document.body.classList.add('on');started=true;t0=T;trad=BASE;rad=BASE*3;ph=.35;
+ setTimeout(()=>{boom(-3,5,-2);boom(3,5.5,2,'⚡')},1800);};
+
+// Bucle
+let last=performance.now();
+function loop(now){requestAnimationFrame(loop);
+ const dt=Math.min((now-last)/1000,.05);last=now;T+=dt;
+ spd+=((open?.12:(turbo?4:1))-spd)*Math.min(1,dt*3);ts+=dt*spd;
+ if(!drag){th+=vth*dt;vth*=Math.pow(.1,dt);idle+=dt;if(idle>2.5&&!open)th+=.1*dt;}
+ rad+=(trad-rad)*Math.min(1,dt*2.2);ph+=(tph-ph)*Math.min(1,dt*3);
+ cam.position.set(rad*Math.sin(ph)*Math.cos(th),rad*Math.cos(ph),rad*Math.sin(ph)*Math.sin(th));cam.lookAt(0,1.4,0);
+ gal.material.uniforms.uT.value=ts;halo.quaternion.copy(cam.quaternion);disk.rotation.y=ts*.5;
+ pcm.uniforms.uT.value=T;const u=started?Math.min(1,(T-t0)/3.5):0;pcm.uniforms.uA.value=1-Math.pow(1-u,3);pcG.rotation.y=Math.PI/2-th;pcG.position.y=4.7+Math.sin(T)*.12;
+ cars.forEach(c=>{const a=c.a0+ts/(c.r+.9);c.j=Math.max(0,c.j-dt/.8);const sp=c.j>0?(1-c.j)*6.283:0,yj=c.j>0?Math.sin((1-c.j)*Math.PI)*1.1:0;
+  c.g.position.set(Math.cos(a)*c.r,.27+Math.sin(T*2+c.idx)*.03+yj,Math.sin(a)*c.r);c.g.rotation.set(-.1,-a-Math.PI/2+sp,0,'YXZ');
+  c.sc+=((hov===c?1.3:1)-c.sc)*Math.min(1,dt*10);c.g.scale.setScalar(c.sc);c.w.forEach(w=>w.rotation.z-=dt*7*spd);});
+ fr.forEach(f=>{const a=f.a0+ts/(f.r+.9);f.s.position.set(Math.cos(a)*f.r,f.y+Math.sin(T+f.a0)*.1,Math.sin(a)*f.r);});
+ fx(dt);ren.render(scene,cam);}
+requestAnimationFrame(loop);
+}
+Promise.race([document.fonts.load("44px 'Patrick Hand'"),new Promise(r=>setTimeout(r,1500))]).catch(()=>{}).then(init);
+</script>
+</body>
+</html>
